@@ -116,7 +116,7 @@ def parse_arguments() -> argparse.Namespace:
         "--stage",
         type=str,
         default="run",
-        choices=["lex", "parse", "validate", "tacky", "codegen", "run"],
+        choices=["lex", "parse", "validate", "tacky", "codegen", "compile", "run"],
     )
     parser.add_argument(
         "--expected-error-codes",
