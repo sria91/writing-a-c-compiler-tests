@@ -395,8 +395,18 @@ class TestChapter(unittest.TestCase):
         # run the executable
         # TODO cleaner handling if executable doesn't exist? or check that it exists above?
         exe = source_file.with_suffix("")
+
+        import platform
+        if platform.machine().lower() == "aarch64" and platform.system().lower() == "linux":
+            import os
+            os.environ["BOX64_NOBANNER"] = "1"
+            os.environ["BOX64_LOG"] = "0"
+            command_args = ["box64", exe]
+        else:
+            command_args = [exe]
+
         result = subprocess.run(
-            [exe], check=False, capture_output=True, text=True, timeout=10.0
+            command_args, check=False, capture_output=True, text=True, timeout=10.0
         )
 
         self.validate_runs(source_file, result)
