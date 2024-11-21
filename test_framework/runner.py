@@ -331,6 +331,9 @@ Then try running this script again from that shell.
             )
             return False
 
+    elif system == "Linux" and machine == "aarch64":
+        pass
+
     # on non-macOS systems, arch MUST be x86-64, otherwise this will not work
     elif machine not in VALID_ARCHS:
         print(
@@ -354,9 +357,24 @@ Then clone the test suite in your Linux distribution and try this command again 
             "This OS isn't officially supported. You might be able to complete the project on this system, but no guarantees."
         )
 
+    if system == "Linux" and machine == "aarch64":
+        # Check that BOX64 command is present
+        try:
+            subprocess.run(["box64", "-v"], check=True, capture_output=True)
+        except FileNotFoundError:
+            msg = "Can't find the 'box64' command. "
+            msg = (
+                    msg
+                    + "Use your system's package manager to install BOX64, then try this command again."
+                )
+            issues.append(msg)
+        gcc = "x86_64-linux-gnu-gcc"
+    else:
+        gcc = "gcc"
+
     # Check that GCC command is present
     try:
-        subprocess.run(["gcc", "-v"], check=True, capture_output=True)
+        subprocess.run([gcc, "-v"], check=True, capture_output=True)
     except FileNotFoundError:
         msg = "Can't find the 'gcc' command. "
         if system == "Darwin":
