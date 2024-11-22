@@ -63,6 +63,9 @@ def get_props_key(source_file: Path) -> str:
     """
     if source_file.stem.endswith("_client"):
         source_file = replace_stem(source_file, source_file.stem[: -len("_client")])
+    import platform
+    if platform.system().lower() == "windows":
+        return str(source_file.relative_to(TEST_DIR)).replace('\\', '/')
     return str(source_file.relative_to(TEST_DIR))
 
 

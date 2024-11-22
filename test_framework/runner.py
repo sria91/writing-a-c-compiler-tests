@@ -341,17 +341,7 @@ Then try running this script again from that shell.
         )
         return False
 
-    elif system == "Windows":
-        # the architecture is right but they need to use WSL
-        print(
-            """You're running Windows. You need to use WSL to emulate Linux.
-Follow these instructions to install WSL and set up a Linux distribution on your machine: https://learn.microsoft.com/en-us/windows/wsl/install.
-Then clone the test suite in your Linux distribution and try this command again from there.
-            """
-        )
-        return False
-
-    elif system not in ["Linux", "FreeBSD"]:
+    elif system not in ["Linux", "FreeBSD", "Windows"]:
         # This is probably some other Unix-like system; it'll probably work but I haven't tested it
         issues.append(
             "This OS isn't officially supported. You might be able to complete the project on this system, but no guarantees."
@@ -369,6 +359,8 @@ Then clone the test suite in your Linux distribution and try this command again 
                 )
             issues.append(msg)
         gcc = "x86_64-linux-gnu-gcc"
+    elif system == "Windows":
+        gcc = "x86_64-w64-mingw32-gcc"
     else:
         gcc = "gcc"
 
@@ -385,6 +377,15 @@ Then clone the test suite in your Linux distribution and try this command again 
 Then try this command again.
 """
             )
+        elif system == "Windows":
+            msg = "Alternatively install GCC from  https://www.msys2.org/, add it to PATH environment variable, then try this command again."
+            print(
+                """You're running Windows. You need to use WSL to emulate Linux.
+Follow these instructions to install WSL and set up a Linux distribution on your machine: https://learn.microsoft.com/en-us/windows/wsl/install.
+Then clone the test suite in your Linux distribution and try this command again from there.
+                """
+            )
+
         else:
             msg = (
                 msg
@@ -409,6 +410,11 @@ Then try this command again.
                     + """LLDB is included in the Xcode command-line developer tools. To install them, run:
                     clang -v
                 Then try this command again."""
+                )
+            elif system == "Windows":
+                msg = (
+                    msg
+                     + "Install GDB from  https://www.msys2.org/, add it to PATH environment variable, then try this command again."
                 )
             else:
                 msg = (
